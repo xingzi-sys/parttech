@@ -46,7 +46,7 @@ start_backend() {
     # 检查依赖
     if [ ! -d "venv" ]; then
         log_info "创建Python虚拟环境..."
-        python3 -m venv venv
+        python3 -m venv venv --copies
     fi
 
     # 激活虚拟环境并安装依赖
@@ -59,11 +59,11 @@ start_backend() {
         python seed.py
     fi
 
-    # 启动后端
-    nohup python run.py > ../logs/backend.log 2>&1 &
-    echo $! > ../logs/backend.pid
+    # 启动后端（使用虚拟环境中的python）
+    nohup python run.py > "$PROJECT_DIR/logs/backend.log" 2>&1 &
+    echo $! > "$PROJECT_DIR/logs/backend.pid"
 
-    log_info "后端服务已启动 (PID: $(cat ../logs/backend.pid))"
+    log_info "后端服务已启动 (PID: $(cat $PROJECT_DIR/logs/backend.pid))"
     deactivate
 }
 
